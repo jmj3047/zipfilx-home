@@ -123,7 +123,7 @@ def search():
     # opt_operator = params_df['division']
     number01 = json.loads(params_df['sys_text01'])['amount']
     number02 = json.loads(params_df['sys_text02'])['amount']
-    number03 = json.loads(params_df['sys_textr03'])['amount']
+    number03 = json.loads(params_df['sys_text03'])['amount']
     number04 = json.loads(params_df['sys_text04'])['amount']
     number05 = json.loads(params_df['sys_text05'])['amount']
     print('============================',number01,number02,number03,number04,number05,'============================')

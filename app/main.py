@@ -4,15 +4,25 @@ import json
 app = Flask(__name__)
 
 ##메인 로직
+# def cals(opt_operator, number01, number02):
+#     if opt_operator == "addition":
+#         return number01 + number02
+#     elif opt_operator == "subtraction": 
+#         return number01 - number02
+#     elif opt_operator == "multiplication":
+#         return number01 * number02
+#     elif opt_operator == "division":
+#         return number01 / number02
 def cals(opt_operator, number01, number02):
-    if opt_operator == "addition":
+    if opt_operator == "+":
         return number01 + number02
-    elif opt_operator == "subtraction": 
+    elif opt_operator == "-": 
         return number01 - number02
-    elif opt_operator == "multiplication":
+    elif opt_operator == "*":
         return number01 * number02
-    elif opt_operator == "division":
+    elif opt_operator == "/":
         return number01 / number02
+
 
 @app.route('/api/calCulator', methods=['POST'])
 def calCulator():

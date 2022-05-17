@@ -98,7 +98,7 @@ def search():
     number03 = json.loads(params_df['sys_number03'])['amount']
     number04 = json.loads(params_df['sys_number04'])['amount']
     number05 = json.loads(params_df['sys_number05'])['amount']
-    print(number01,number02,number03,number04,number05)
+    print('============================',number01,number02,number03,number04,number05,'============================')
     # print(opt_operator, type(opt_operator), number01, type(number01))
 
     answer_text = str(search_pro(number01, number02,number03,number04,number05))
@@ -129,6 +129,7 @@ def sayHello():
     body = request.get_json() # 사용자가 입력한 데이터
     print(body)
     print(body['userRequest']['utterance'])
+    print('============================')
 
     responseBody = {
         "version": "2.0",

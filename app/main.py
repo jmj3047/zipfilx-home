@@ -54,7 +54,7 @@ def calCulator():
     return responseBody
 
 
-def search_pro(opt_operator, number01, number02,number03,number04,number05):
+def search_pro(number01, number02,number03,number04,number05):
     p1 = "주택도시기금 디딤돌 대출"
     p2 = "주택도시기금 신혼부부전용 구입자금"
     p3 = "오피스텔 구입자금"
@@ -100,9 +100,9 @@ def search():
     number04 = json.loads(params_df['sys_number04'])['amount']
     number05 = json.loads(params_df['sys_number05'])['amount']
 
-    print(opt_operator, type(opt_operator), number01, type(number01))
+    # print(opt_operator, type(opt_operator), number01, type(number01))
 
-    answer_text = str(search_pro(opt_operator, number01, number02,number03,number04,number05))
+    answer_text = str(search_pro(number01, number02,number03,number04,number05))
 
     responseBody = {
         "version": "2.0",

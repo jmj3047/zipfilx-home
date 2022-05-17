@@ -54,7 +54,7 @@ def calCulator():
     return responseBody
 
 
-def search_pro(number01, number02,number03,number04,number05):
+def search_pro(number01,number02,number03,number04,number05):
     p1 = "주택도시기금 디딤돌 대출"
     p2 = "주택도시기금 신혼부부전용 구입자금"
     p3 = "오피스텔 구입자금"
@@ -69,16 +69,15 @@ def search_pro(number01, number02,number03,number04,number05):
     p12 = "주거안정월세대출(우대/취준생)"
     p13 = "주거안정월세대출(우대/사회초년생)"
     p14 = "청년전용 버팀목전세자금(신혼/다자녀/2자녀가구)"
-    #list 넣고
-    lst = []
-    lst = lst.append(number01,number02, number03, number04, number05)
     
-    #q1~q5 리스트 요소랑 매치
     q1 = number01
     q2 = number02
     q3 = number03
     q4 = number04
     q5 = number05
+    
+    print(q1,q2,q3,q4,q5, type(q1))
+    
     
     if q1 in [2,3] and q2 in [1,2] and q3 in [2,3] and q4 in [1,2] and q5 in [1,2]:
         return p1

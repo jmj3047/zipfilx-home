@@ -79,10 +79,31 @@ def search_pro(number01,number02,number03,number04,number05):
     print(q1,q2,q3,q4,q5, type(q1))
     
     
-    if q1 in [2,3] and q2 in [1,2] and q3 in [2,3] and q4 in [1,2] and q5 in [1,2]:
-        return p1
+    if q1 in [1,2] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [1,2]:
+        return p1+'\n'
+    if q1 in [1,2] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [2]:
+        return p2+'\n'
+    if q1 in [1,2] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [2]:
+        return p3+'\n'
+    if q1 in [1,2,3] and q2 in [1,2] and q3 in [1,2] and q4 in [3] and q5 in [1,2,3]:
+        return p4+'\n'
+    if q1 in [1,2] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [1,2,3]:
+        return p5+'\n'
+    if q1 in [1] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [1]:
+        return p6+'\n'
+    if q1 in [1] and q2 in [2,3] and q3 [1,2,3] and q4 in [1] and q5 in [1]:
+        return p7+'\n'
+    if q1 in [1,2] and q2 in [2] and q3 in [1,2,3] and q4 in [1] and q5 in [1]:
+        return p8+'\n',p10+'\n'
+    if q1 in [1,2] and q2 in [2,3] and q3 in [1,2,3] and q4 in [1] and q5 in [1]:
+        return p9+'\n', p11+'\n', p13+'\n'
+    if q1 in [1,2] and q2 in [2,3] and q3 in [1] and q4 in [1] and q5 in [1]:
+        return p12+'\n'
+    if q1 in [1] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [1]:
+        return p14+'\n'
     else: 
-        return p2
+        return "대출상품이 없습니다."
+    
     
 
 

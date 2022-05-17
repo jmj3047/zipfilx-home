@@ -80,27 +80,27 @@ def search_pro(number01,number02,number03,number04,number05):
     
     
     if q1 in [1,2] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [1,2]:
-        return p1+'\n'
+        return "고객님은 현재 "+p1+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1,2] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [2]:
-        return p2+'\n'
+        return "고객님은 현재 "+p2+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1,2] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [2]:
-        return p3+'\n'
+        return "고객님은 현재 "+p3+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1,2,3] and q2 in [1,2] and q3 in [1,2] and q4 in [3] and q5 in [1,2,3]:
-        return p4+'\n'
+        return "고객님은 현재 "+p4+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1,2] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [1,2,3]:
-        return p5+'\n'
+        return "고객님은 현재 "+p5+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [1]:
-        return p6+'\n'
+        return "고객님은 현재 "+p6+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1] and q2 in [2,3] and q3 in [1,2,3] and q4 in [1] and q5 in [1]:
-        return p7+'\n'
+        return "고객님은 현재 "+p7+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1,2] and q2 in [2] and q3 in [1,2,3] and q4 in [1] and q5 in [1]:
-        return p8+'\n',p10+'\n'
+        return "고객님은 현재 "+p8+'\n',p10+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1,2] and q2 in [2,3] and q3 in [1,2,3] and q4 in [1] and q5 in [1]:
-        return p9+'\n', p11+'\n', p13+'\n'
+        return "고객님은 현재 "+p9+'\n', p11+'\n', p13+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1,2] and q2 in [2,3] and q3 in [1] and q4 in [1] and q5 in [1]:
-        return p12+'\n'
+        return "고객님은 현재 "+p12+'\n'+"상품으로 대출 받을수 있습니다."
     if q1 in [1] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [1]:
-        return p14+'\n'
+        return "고객님은 현재 "+p14+'\n'+"상품으로 대출 받을수 있습니다."
     else: 
         return "대출상품이 없습니다."
     
@@ -122,7 +122,7 @@ def search():
     print('============================',number01,number02,number03,number04,number05,'============================')
     # print(opt_operator, type(opt_operator), number01, type(number01))
 
-    answer_text = "고객님은 현재 "+str(search_pro(number01, number02,number03,number04,number05))+"상품으로 대출 받을수 있습니다."
+    answer_text = str(search_pro(number01, number02,number03,number04,number05))
 
     responseBody = {
         "version": "2.0",

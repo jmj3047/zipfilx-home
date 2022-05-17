@@ -93,7 +93,7 @@ def search():
     print(body)
     params_df = body['action']['params']
     print(type(params_df))
-    opt_operator = params_df['division']
+    # opt_operator = params_df['division']
     number01 = json.loads(params_df['sys_number01'])['amount']
     number02 = json.loads(params_df['sys_number02'])['amount']
     number03 = json.loads(params_df['sys_number03'])['amount']

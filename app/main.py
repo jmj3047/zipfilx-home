@@ -91,7 +91,7 @@ def search_pro(number01,number02,number03,number04,number05):
         return p5+'\n'
     if q1 in [1] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [1]:
         return p6+'\n'
-    if q1 ==1 and q2 in [2,3] and q3 [1,2,3] and q4 ==1 and q5 == 1:
+    if q1 in [1] and q2 in [2,3] and q3 in [1,2,3] and q4 in [1] and q5 in [1]:
         return p7+'\n'
     if q1 in [1,2] and q2 in [2] and q3 in [1,2,3] and q4 in [1] and q5 in [1]:
         return p8+'\n',p10+'\n'

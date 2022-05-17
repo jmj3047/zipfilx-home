@@ -122,7 +122,7 @@ def search():
     print('============================',number01,number02,number03,number04,number05,'============================')
     # print(opt_operator, type(opt_operator), number01, type(number01))
 
-    answer_text = str(search_pro(number01, number02,number03,number04,number05))
+    answer_text = "고객님은 현재 "+str(search_pro(number01, number02,number03,number04,number05))+"상품으로 대출 받을수 있습니다."
 
     responseBody = {
         "version": "2.0",

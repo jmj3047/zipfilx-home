@@ -72,6 +72,37 @@ def sayHello():
     return responseBody
 
 #매매_input
+# def search_pro_buy(number01,number02,number03,number04,number05):
+#     p1 = "주택도시기금 디딤돌 대출"
+#     p2 = "주택도시기금 신혼부부전용 구입자금"
+#     p3 = "오피스텔 구입자금"
+#     p4 = "한국주택금융공사 보금자리론"
+#     p5 = "한국주택금융공사 디딤돌대출"
+
+    
+#     q1 = number01
+#     q2 = number02
+#     q3 = number03
+#     q4 = number04
+#     q5 = number05
+    
+#     print(q1,q2,q3,q4,q5, type(q1))
+    
+    
+#     if q1 in [1,2] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [1,2]:
+#         return "고객님은 현재 "+p1+'\n'+"상품으로 대출 받을수 있습니다."
+#     if q1 in [1,2] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [2]:
+#         return "고객님은 현재 "+p2+'\n'+"상품으로 대출 받을수 있습니다."
+#     if q1 in [1,2] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [2]:
+#         return "고객님은 현재 "+p3+'\n'+"상품으로 대출 받을수 있습니다."
+#     if q1 in [1,2,3] and q2 in [1,2] and q3 in [1,2] and q4 in [3] and q5 in [1,2,3]:
+#         return "고객님은 현재 "+p4+'\n'+"상품으로 대출 받을수 있습니다."
+#     if q1 in [1,2] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [1,2,3]:
+#         return "고객님은 현재 "+p5+'\n'+"상품으로 대출 받을수 있습니다."
+#     else: 
+#         return "대출상품이 없습니다."
+   
+#매매_input_지원
 def search_pro_buy(number01,number02,number03,number04,number05):
     p1 = "주택도시기금 디딤돌 대출"
     p2 = "주택도시기금 신혼부부전용 구입자금"
@@ -88,22 +119,32 @@ def search_pro_buy(number01,number02,number03,number04,number05):
     
     print(q1,q2,q3,q4,q5, type(q1))
     
-    
+    p_lst = []
     if q1 in [1,2] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [1,2]:
-        return "고객님은 현재 "+p1+'\n'+"상품으로 대출 받을수 있습니다."
+        p_lst.append(p1)
     if q1 in [1,2] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [2]:
-        return "고객님은 현재 "+p2+'\n'+"상품으로 대출 받을수 있습니다."
+        p_lst.append(p2)
     if q1 in [1,2] and q2 in [2,3] and q3 in [2,3] and q4 in [2] and q5 in [2]:
-        return "고객님은 현재 "+p3+'\n'+"상품으로 대출 받을수 있습니다."
+        p_lst.append(p3)
     if q1 in [1,2,3] and q2 in [1,2] and q3 in [1,2] and q4 in [3] and q5 in [1,2,3]:
-        return "고객님은 현재 "+p4+'\n'+"상품으로 대출 받을수 있습니다."
+        p_lst.append(p4)
     if q1 in [1,2] and q2 in [2,3] and q3 in [2] and q4 in [2] and q5 in [1,2,3]:
-        return "고객님은 현재 "+p5+'\n'+"상품으로 대출 받을수 있습니다."
-    else: 
-        return "대출상품이 없습니다."
+        p_lst.append(p5)
+    
+    if len(p_lst) == 1:
+        return f'고객님은 현재 {p_lst[0]} 상품을 대출 받을 수 있습니다.'
+    elif len(p_lst) == 2:
+        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]} 상품을 대출 받을 수 있습니다.'
+    elif len(p_lst) == 3:
+        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]} 상품을 대출 받을 수 있습니다.'
+    elif len(p_lst) == 4:
+        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]} 상품을 대출 받을 수 있습니다.'
+    elif len(p_lst) == 5:
+        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]} 상품을 대출 받을 수 있습니다.'
+    else:
+        return "현재 대출 받을 수 있는 상품이 없습니다." 
     
     
-
 #매매_output
 @app.route('/api/search_buy', methods=['POST'])
 def search_buy():

@@ -304,9 +304,9 @@ def calCulator():
     params_df = body['action']['params']
     print(type(params_df))
     opt_operator = params_df['operators']
-    amount = json.loads(params_df['sys_number01'])['amount']
-    period = json.loads(params_df['sys_number02'])['amount']
-    rate = json.loads(params_df['sys_number02'])['amount']
+    amount = json.loads(params_df['amount'])['amount']
+    period = json.loads(params_df['period'])['amount']
+    rate = json.loads(params_df['rate'])['amount']
 
     # print(opt_operator, type(opt_operator), amount, type(amount))
 

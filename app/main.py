@@ -2,6 +2,7 @@ from flask import Flask, request
 import json
 import pandas as pd
 import math
+import numpy as np
 
 
 app = Flask(__name__)

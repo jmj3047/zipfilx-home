@@ -246,83 +246,84 @@ def search_borrow():
     return responseBody
 
 
-#매매계산_input
-def calc_buy():
-    return "pass"
+# #매매계산_input
+# def calc_buy():
+#     return "pass"
 
-#전세계산_input
-def calc_borrow_year():
-    return "pass"
+# #전세계산_input
+# def calc_borrow_year():
+#     return "pass"
 
-#월세계산_input
-def calc_borrow_month():
-    return "pass"
+# #월세계산_input
+# def calc_borrow_month():
+#     return "pass"
 
-#매매계산_output
-def calc_buy():
-    return "pass"
+# #매매계산_output
+# def calc_buy():
+#     return "pass"
 
-#전세계산_output
-def calc_borrow_year():
-    return "pass"
+# #전세계산_output
+# def calc_borrow_year():
+#     return "pass"
 
-#월세계산_output
-def calc_borrow_month():
-    return "pass"
+# #월세계산_output
+# def calc_borrow_month():
+#     return "pass"
 
 
-#테스트_input
-def test_calc(amount, period, rate):
-    rate=float(rate)/12.0# 연이율을 월 rate로 변환
+# #테스트_input
+# def test_calc(amount, period, rate):
+#     rate=float(rate)/12.0 # 연이율을 월 rate로 변환
 
-    # 대출경과월 세팅
-    interest1_table = pd.DataFrame({"대출경과월":range(period)}) + 1
+#     # 대출경과월 세팅
+#     interest1_table = pd.DataFrame({"대출경과월":range(period)}) + 1
 
-    # 매월 납입하는 amount 계산
-    interest1_table["원금납입액"] = round(amount / period)
+#     # 매월 납입하는 amount 계산
+#     interest1_table["원금납입액"] = round(amount / period)
 
-    # 마지막 납입월 보정 (1200만원 / 36의 값이 무한소수로 표현되므로 마지막 납입금액 보정 작업 수행
-    interest1_table.loc[period-1,"원금납입액"] =math.floor(amount/period)
+#     # 마지막 납입월 보정 (1200만원 / 36의 값이 무한소수로 표현되므로 마지막 납입금액 보정 작업 수행
+#     interest1_table.loc[period-1,"원금납입액"] =math.floor(amount/period)
 
-    # 대출 경과월에 따른 대출잔액, 월이자납입금액 계산
-    for i in range(interest1_table["대출경과월"].size) :
-        if i == 0 :
-            interest1_table.loc[i, "대출잔액"] = round(amount - interest1_table.loc[i,"원금납입액"])
-        else :
-            interest1_table.loc[i, "대출잔액"] = round(interest1_table.loc[i-1, "대출잔액"] - interest1_table.loc[i, "원금납입액"]) 
-            interest1_table.loc[i, "월이자납입금액"] = interest1_table.loc[i, "대출잔액"] * rate
+#     # 대출 경과월에 따른 대출잔액, 월이자납입금액 계산
+#     for i in range(interest1_table["대출경과월"].size) :
+#         if i == 0 :
+#             interest1_table.loc[i, "대출잔액"] = round(amount - interest1_table.loc[i,"원금납입액"])
+#         else :
+#             interest1_table.loc[i, "대출잔액"] = round(interest1_table.loc[i-1, "대출잔액"] - interest1_table.loc[i, "원금납입액"]) 
+#             interest1_table.loc[i, "월이자납입금액"] = interest1_table.loc[i, "대출잔액"] * rate
         
-    print (interest1_table)
-    # 대출상환표 출력
-    return interest1_table
+#     print (interest1_table)
+#     # 대출상환표 출력
+#     return interest1_table
 
-#test_output
-@app.route('/api/interest_calCulator', methods=['POST'])
-def calCulator():
-    body = request.get_json()
-    print(body)
-    params_df = body['action']['params']
-    print(type(params_df))
-    # opt_operator = params_df['operators']
-    amount = json.loads(params_df['sys_number01'])['amount']
-    period = json.loads(params_df['sys_number02'])['amount']
-    rate = json.loads(params_df['sys_number03'])['amount']
+# #test_output
+# @app.route('/api/interest_calCulator', methods=['POST'])
+# def calCulator():
+#     print("호출")
+#     body = request.get_json()
+#     print(body)
+#     params_df = body['action']['params']
+#     print(type(params_df))
+#     # opt_operator = params_df['operators']
+#     amount = json.loads(params_df['sys_number01'])['amount']
+#     period = json.loads(params_df['sys_number02'])['amount']
+#     rate = json.loads(params_df['sys_number03'])['amount']
 
-    # print(opt_operator, type(opt_operator), amount, type(amount))
+#     # print(opt_operator, type(opt_operator), amount, type(amount))
 
-    answer_text = str(test_calc(amount, period,rate))
+#     answer_text = str(test_calc(amount, period,rate))
 
-    responseBody = {
-        "version": "2.0",
-        "template": {
-            "outputs": [
-                {
-                    "simpleText": {
-                        "text": answer_text
-                    }
-                }
-            ]
-        }
-    }
+#     responseBody = {
+#         "version": "2.0",
+#         "template": {
+#             "outputs": [
+#                 {
+#                     "simpleText": {
+#                         "text": answer_text
+#                     }
+#                 }
+#             ]
+#         }
+#     }
 
-    return responseBody
+#     return responseBody

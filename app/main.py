@@ -3,6 +3,8 @@ import json
 import pandas as pd
 import math
 import numpy as np
+import cx_Oracle
+import os
 
 
 app = Flask(__name__)
@@ -78,12 +80,54 @@ def sayHello():
 
    
 #매매조회_input
+# def search_pro_buy(number01,number02,number03,number04,number05):
+#     p1 = "주택도시기금 디딤돌 대출"
+#     p2 = "주택도시기금 신혼부부전용 구입자금"
+#     p3 = "오피스텔 구입자금"
+#     p4 = "한국주택금융공사 보금자리론"
+#     p5 = "한국주택금융공사 디딤돌대출"
+
+    
+#     q1 = number01
+#     q2 = number02
+#     q3 = number03
+#     q4 = number04
+#     q5 = number05
+    
+#     print(q1,q2,q3,q4,q5, type(q1))
+    
+#     p_lst = []
+#     if q1 in [1,2] and q2 in [2,3] and q3 in [1,2,3] and q4 in [1,2] and q5 in [1,2]:
+#         p_lst.append(p1)
+#     if q1 in [1,2] and q2 in [2,3] and q3 == 2 and q4 in [1,2] and q5 in [1,2]:
+#         p_lst.append(p2)
+#     if q1 in [1,2] and q2 in [2,3] and q3 in [1,2,3] and q4 == 2 and q5 == 2:
+#         p_lst.append(p3)
+#     if q1 in [1,2,3] and q2 in [2,3] and q3 in [1,2] and q4 in [1,2] and q5 in [1,2,3]:
+#         p_lst.append(p4)
+#     if q1 in [1,2] and q2 in [1,2,3] and q3 == 2 and q4 in [1,2] and q5 in [1,2,3]:
+#         p_lst.append(p5)
+    
+#     if len(p_lst) == 1:
+#         return f'고객님은 현재 {p_lst[0]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 2:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 3:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 4:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 5:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]} 상품을 대출 받을 수 있습니다.'
+#     else:
+#         return "현재 대출 받을 수 있는 상품이 없습니다."
+
+#매매_input_지원
 def search_pro_buy(number01,number02,number03,number04,number05):
-    p1 = "주택도시기금 디딤돌 대출"
-    p2 = "주택도시기금 신혼부부전용 구입자금"
-    p3 = "오피스텔 구입자금"
-    p4 = "한국주택금융공사 보금자리론"
-    p5 = "한국주택금융공사 디딤돌대출"
+    i1 = 1
+    i2 = 2
+    i3 = 3
+    i4 = 4
+    i5 = 5
 
     
     q1 = number01
@@ -94,30 +138,32 @@ def search_pro_buy(number01,number02,number03,number04,number05):
     
     print(q1,q2,q3,q4,q5, type(q1))
     
-    p_lst = []
+    i_lst = []
     if q1 in [1,2] and q2 in [2,3] and q3 in [1,2,3] and q4 in [1,2] and q5 in [1,2]:
-        p_lst.append(p1)
+        i_lst.append(i1)
     if q1 in [1,2] and q2 in [2,3] and q3 == 2 and q4 in [1,2] and q5 in [1,2]:
-        p_lst.append(p2)
+        i_lst.append(i2)
     if q1 in [1,2] and q2 in [2,3] and q3 in [1,2,3] and q4 == 2 and q5 == 2:
-        p_lst.append(p3)
+        i_lst.append(i3)
     if q1 in [1,2,3] and q2 in [2,3] and q3 in [1,2] and q4 in [1,2] and q5 in [1,2,3]:
-        p_lst.append(p4)
+        i_lst.append(i4)
     if q1 in [1,2] and q2 in [1,2,3] and q3 == 2 and q4 in [1,2] and q5 in [1,2,3]:
-        p_lst.append(p5)
+        i_lst.append(i5)
+    # print(i_lst)
     
-    if len(p_lst) == 1:
-        return f'고객님은 현재 {p_lst[0]} 상품을 대출 받을 수 있습니다.'
-    elif len(p_lst) == 2:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]} 상품을 대출 받을 수 있습니다.'
-    elif len(p_lst) == 3:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]} 상품을 대출 받을 수 있습니다.'
-    elif len(p_lst) == 4:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]} 상품을 대출 받을 수 있습니다.'
-    elif len(p_lst) == 5:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]} 상품을 대출 받을 수 있습니다.'
-    else:
-        return "현재 대출 받을 수 있는 상품이 없습니다."
+    
+    LOCATION=r"C:/instatnt/instantclient_21_3"
+    os.environ["PATH"] = LOCATION + ";" + os.environ["PATH"]
+    connect = cx_Oracle.connect("ora_user", "kim", "localhost:1521/myoracle")
+    cursor = connect.cursor()
+    cursor.execute('SELECT * FROM REAL_PRODUCT1')
+    rows=cursor.fetchall()
+    lit=[]
+    for i in range(len(i_lst)):
+               
+        string=list(rows[i_lst[i]-1])
+        return string
+
     
     
 #매매조회_output
@@ -155,16 +201,74 @@ def search_buy():
 
 
 #전세조회_input_지원
+# def search_pro_borrow(number01,number02,number03,number04,number05):
+#     p6 = "신혼부부전용 전세자금"
+#     p7 = "버팀목전세자금"
+#     p8 = "중소기업취업청년 전월세 대출"
+#     p9 = "청년전용 보증부월세대출"
+#     p10 = "청년전용 버팀목전세자금"
+#     p11 = "주거안정월세대출(일반형)"
+#     p12 = "주거안정월세대출(우대형/취업준비생)"
+#     p13 = "주거안정월세대출(우대형/사회초년생)"
+#     p14 = "청년전용 버팀목전세자금(신혼가구,다자녀가구,2자녀가구)"
+
+    
+#     q1 = number01
+#     q2 = number02
+#     q3 = number03
+#     q4 = number04
+#     q5 = number05
+    
+#     print(q1,q2,q3,q4,q5, type(q1))
+    
+#     p_lst = []
+#     if q1 == 1 and q2 in [2,3] and q3 == 2 and q4 in [1,2] and q5 == 1:
+#         p_lst.append(p6)
+#     if q1 == 1 and q2 in [2,3] and q3 in [1,2,3] and q4 == 1 and q5 == 1:
+#         p_lst.append(p7)
+#     if q1 in [1,2,3] and q2 == 2 and q3 in [1,2,3] and q4 == 1 and q5 == 1:
+#         p_lst.append(p8)
+#     if q1 in [1,2,3] and q2 in [2,3] and q3 in [1,2,3] and q4 == 1 and q5 == 1:
+#         p_lst.append(p9)
+#     if q1 in [1,2,3] and q2 == 2 and q3 in [1,2,3] and q4 in [1,2] and q5 == 1:
+#         p_lst.append(p10)
+#         p_lst.append(p14)
+#     if q1 in [1,2,3] and q2 == 2 and q3 in [1,2,3] and q4 == 1 and q5 == 1:
+#         p_lst.append(p11)
+#         p_lst.append(p12)
+#         p_lst.append(p13)
+    
+#     if len(p_lst) == 1:
+#         return f'고객님은 현재 {p_lst[0]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 2:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 3:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 4:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 5:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 6:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]}, {p_lst[5]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 7:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]}, {p_lst[5]}, {p_lst[6]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 8:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]}, {p_lst[5]}, {p_lst[6]}, {p_lst[7]} 상품을 대출 받을 수 있습니다.'
+#     elif len(p_lst) == 9:
+#         return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]}, {p_lst[5]}, {p_lst[6]}, {p_lst[7]}, {p_lst[8]} 상품을 대출 받을 수 있습니다.'
+#     else:
+#         return "현재 대출 받을 수 있는 상품이 없습니다."
+
 def search_pro_borrow(number01,number02,number03,number04,number05):
-    p6 = "신혼부부전용 전세자금"
-    p7 = "버팀목전세자금"
-    p8 = "중소기업취업청년 전월세 대출"
-    p9 = "청년전용 보증부월세대출"
-    p10 = "청년전용 버팀목전세자금"
-    p11 = "주거안정월세대출(일반형)"
-    p12 = "주거안정월세대출(우대형/취업준비생)"
-    p13 = "주거안정월세대출(우대형/사회초년생)"
-    p14 = "청년전용 버팀목전세자금(신혼가구,다자녀가구,2자녀가구)"
+    i6=6
+    i7 =7
+    i8=8
+    i9=9
+    i10=10
+    i11=11
+    i12=12
+    i13=13
+    i14=14
 
     
     q1 = number01
@@ -175,43 +279,58 @@ def search_pro_borrow(number01,number02,number03,number04,number05):
     
     print(q1,q2,q3,q4,q5, type(q1))
     
-    p_lst = []
+    i_lst = []
     if q1 == 1 and q2 in [2,3] and q3 == 2 and q4 in [1,2] and q5 == 1:
-        p_lst.append(p6)
+        i_lst.append(i6)
     if q1 == 1 and q2 in [2,3] and q3 in [1,2,3] and q4 == 1 and q5 == 1:
-        p_lst.append(p7)
+        i_lst.append(i7)
     if q1 in [1,2,3] and q2 == 2 and q3 in [1,2,3] and q4 == 1 and q5 == 1:
-        p_lst.append(p8)
+        i_lst.append(i8)
     if q1 in [1,2,3] and q2 in [2,3] and q3 in [1,2,3] and q4 == 1 and q5 == 1:
-        p_lst.append(p9)
+        i_lst.append(i9)
     if q1 in [1,2,3] and q2 == 2 and q3 in [1,2,3] and q4 in [1,2] and q5 == 1:
-        p_lst.append(p10)
-        p_lst.append(p14)
+        i_lst.append(i10)
+        i_lst.append(i14)
     if q1 in [1,2,3] and q2 == 2 and q3 in [1,2,3] and q4 == 1 and q5 == 1:
-        p_lst.append(p11)
-        p_lst.append(p12)
-        p_lst.append(p13)
+        i_lst.append(i11)
+        i_lst.append(i12)
+        i_lst.append(i13)
+
     
-    if len(p_lst) == 1:
-        return f'고객님은 현재 {p_lst[0]} 상품을 대출 받을 수 있습니다.'
+    LOCATION=r"C:/instatnt/instantclient_21_3"
+    os.environ["PATH"] = LOCATION + ";" + os.environ["PATH"]
+    connect = cx_Oracle.connect("ora_user", "kim", "localhost:1521/myoracle")
+    cursor = connect.cursor()
+    cursor.execute('SELECT * FROM REAL_PRODUCT1')
+    rows=cursor.fetchall()
+    lit=[]
+    for i in range(len(i_lst)):
+               
+        string=list(rows[i_lst[i]-1])
+        return string
+    
+   ''' 
+   if len(p_lst) == 1:
+        return f'고객님은 현재 {i_lst[0]} 상품을 대출 받을 수 있습니다.'
     elif len(p_lst) == 2:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]} 상품을 대출 받을 수 있습니다.'
+        return f'고객님은 현재 {i_lst[0]}, {i_lst[1]} 상품을 대출 받을 수 있습니다.'
     elif len(p_lst) == 3:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]} 상품을 대출 받을 수 있습니다.'
+        return f'고객님은 현재 {i_lst[0]}, {i_lst[1]}, {i_lst[2]} 상품을 대출 받을 수 있습니다.'
     elif len(p_lst) == 4:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]} 상품을 대출 받을 수 있습니다.'
+        return f'고객님은 현재 {i_lst[0]}, {i_lst[1]}, {i_lst[2]}, {i_lst[3]} 상품을 대출 받을 수 있습니다.'
     elif len(p_lst) == 5:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]} 상품을 대출 받을 수 있습니다.'
+        return f'고객님은 현재 {i_lst[0]}, {i_lst[1]}, {i_lst[2]}, {i_lst[3]}, {i_lst[4]} 상품을 대출 받을 수 있습니다.'
     elif len(p_lst) == 6:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]}, {p_lst[5]} 상품을 대출 받을 수 있습니다.'
+        return f'고객님은 현재 {i_lst[0]}, {i_lst[1]}, {i_lst[2]}, {i_lst[3]}, {i_lst[4]}, {i_lst[5]} 상품을 대출 받을 수 있습니다.'
     elif len(p_lst) == 7:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]}, {p_lst[5]}, {p_lst[6]} 상품을 대출 받을 수 있습니다.'
+        return f'고객님은 현재 {i_lst[0]}, {i_lst[1]}, {i_lst[2]}, {i_lst[3]}, {i_lst[4]}, {i_lst[5]}, {i_lst[6]} 상품을 대출 받을 수 있습니다.'
     elif len(p_lst) == 8:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]}, {p_lst[5]}, {p_lst[6]}, {p_lst[7]} 상품을 대출 받을 수 있습니다.'
+        return f'고객님은 현재 {i_lst[0]}, {i_lst[1]}, {i_lst[2]}, {i_lst[3]}, {i_lst[4]}, {i_lst[5]}, {i_lst[6]}, {i_lst[7]} 상품을 대출 받을 수 있습니다.'
     elif len(p_lst) == 9:
-        return f'고객님은 현재 {p_lst[0]}, {p_lst[1]}, {p_lst[2]}, {p_lst[3]}, {p_lst[4]}, {p_lst[5]}, {p_lst[6]}, {p_lst[7]}, {p_lst[8]} 상품을 대출 받을 수 있습니다.'
+        return f'고객님은 현재 {i_lst[0]}, {i_lst[1]}, {i_lst[2]}, {i_lst[3]}, {i_lst[4]}, {i_lst[5]}, {i_lst[6]}, {i_lst[7]}, {i_lst[8]} 상품을 대출 받을 수 있습니다.'
     else:
-        return "현재 대출 받을 수 있는 상품이 없습니다."
+        return "현재 대출 받을 수 있는 상품이 없습니다."'''
+
 
 #전세조회_output
 @app.route('/api/search_borrow', methods=['POST'])
@@ -727,9 +846,6 @@ def calc_pro_year(number01, number02, number03, number04,number05):
             + "상품14 - 원금균등상환" + '\n' + cal_method3(amount, period, cal_14()).to_string()
     else:
         return "계산이 잘못되었습니다."
-
-
-
 
 
 #전세계산_output

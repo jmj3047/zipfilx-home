@@ -3,8 +3,7 @@ import json
 import pandas as pd
 import math
 import numpy as np
-# import cx_Oracle
-# import os
+
 
 
 app = Flask(__name__)

@@ -516,7 +516,7 @@ def calc_buy():
     return responseBody
 
 #전세계산_input
-def calc_borrow_year(number01, number02, number03, number04,number05):
+def calc_pro_year(number01, number02, number03, number04,number05):
     amount = number01
     period = number02
     income = number03
@@ -733,6 +733,7 @@ def calc_borrow_year(number01, number02, number03, number04,number05):
 
 
 #전세계산_output
+@app.route('/api/calc_borrow_year', methods=['POST'])
 def calc_borrow_year():
     body = request.get_json()
     print(body)
@@ -747,7 +748,7 @@ def calc_borrow_year():
     print('==========전세 계산기===========',number01,number02,number03,number04,number05,'============================')
     # print(opt_operator, type(opt_operator), number01, type(number01))
 
-    answer_text = str(calc_borrow_year(number01, number02,number03,number04))
+    answer_text = str(calc_pro_year(number01, number02,number03,number04,number05))
 
     responseBody = {
         "version": "2.0",

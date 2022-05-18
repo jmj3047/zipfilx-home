@@ -515,19 +515,260 @@ def calc_buy():
 
     return responseBody
 
-# #전세계산_input
-# def calc_borrow_year():
-#     return "pass"
+#전세계산_input
+def calc_borrow_year(number01, number02, number03, number04,number05):
+    amount = number01
+    period = number02
+    income = number03
+    method = number04
+    deposit = number05
+
+    '''
+    각 상품별 적용금리 계산 함수
+    '''
+
+    # Product 6
+    multicol6 = pd.MultiIndex.from_tuples([("임차보증금", "5천만원 이하"),
+                                    ("임차보증금", "5천만원 초과 ~ 1억원 이하"),
+                                    ("임차보증금", "1억원 초과 ~ 1.5억원 이하"),
+                                    ("임차보증금", "1.5억 초과")])
+    df6 = pd.DataFrame([[0.012, 0.013, 0.014, 0.015],
+                        [0.015, 0.016, 0.017, 0.018],
+                        [0.018, 0.019, 0.019, 0.021]],
+                    index = ["2천만원 이하", "2천만원 초과 4천만원 이하", "4천만원 초과 6천만원 이하"],
+                    columns = multicol6)
+
+    def cal_6():
+        if income <= 2000:
+            ind = 0
+        elif income <= 4000:
+            ind = 1
+        elif income <= 6000:
+            ind = 2
+        else:
+            ind = 0
+
+        if deposit <= 5000:
+            col =  0
+        elif deposit <= 10000:
+            col =  1
+        elif deposit <= 15000:
+            col =  2
+        elif deposit > 15000:
+            col =  3
+        else:
+            col = 0
+
+        interest = df6.iloc[ind,col]
+
+        return(round(interest,3))
+
+    # Product 7
+    multicol7 = pd.MultiIndex.from_tuples([("임차보증금", "5천만원 이하"),
+                                    ("임차보증금", "5천만원 초과 ~ 1억원 이하"),
+                                    ("임차보증금", "1억원 초과") ])
+                                    
+    df7 = pd.DataFrame([[0.018, 0.019, 0.02],
+                        [0.020, 0.021, 0.022],
+                        [0.022, 0.023, 0.024]], 
+                    index = ["2천만원 이하", "2천만원 초과 4천만원 이하", "4천만원 초과 6천만원 이하"],
+                    columns = multicol7)
+
+    def cal_7():
+        if income <= 2000:
+            ind = 0
+        elif income <= 4000:
+            ind = 1
+        elif income <= 6000:
+            ind = 2
+        else:
+            ind = 0
+
+        if deposit <= 5000:
+            col =  0
+        elif deposit <= 10000 :
+            col =  1
+        else:
+            col = 2
+
+        interest = df7.iloc[ind,col]
+
+        return(round(interest,3))
+
+    # Product 8
+    def cal_8():
+        interest = 0.012
+        return interest
+
+    # Product 10
+    df_inter = pd.DataFrame([[0.015],
+                        [0.018],
+                        [0.021]],
+                index = ["2천만원 이하", "2천만원 초과 4천만원 이하", "4천만원 초과 6천만원 이하"],
+                columns = ["임차보증금 1억원 이하"])
+    
+    def select():
+
+        if income < 2000:
+            val = df_inter.iloc[0,0]
+            return val
+        elif income <= 4000 :
+            val = df_inter.iloc[1,0]
+            return val
+        elif income > 4000:
+            val = df_inter.iloc[2,0]
+            return val
+
+    def cal_10():
+        
+        if amount <= 5000 and deposit <= 7000:
+            interest = select() - 0.003
+            return interest
+        elif (amount <= 7000 or amount <= deposit * 0.8) and deposit <=10000:
+            interest = select()
+            return interest
+        else:
+            return 0
+
+    # Product 14
+    def cal_14():
+        interest = select()
+        return interest
+
+
+    '''
+    상환방식별 납입금액 반환 함수
+    '''
+
+    # 만기일시상환
+    def cal_method1(amount, period, rate):
+
+        rate = float(rate)/12.0
+
+        # 대출경과월 세팅
+        table1 = pd.DataFrame({"대출경과월":range(period)}) + 1
+
+        # 매월 납입하는 이자액 계산
+        table1["월이자납입금액"] = amount * rate
+
+        # 대출 경과월에 따른 대출잔액 및 월이자납입금액 계산
+        for i in range(table1["대출경과월"].size) :
+            if table1.loc[i,"대출경과월"] == period :
+                table1.loc[i, "대출잔액"] = 0 
+                table1.loc[i, "월이자납입금액"] = 0
+            else :
+                table1.loc[i, "대출잔액"] = amount
+                
+        # 대출상환표 출력
+        return table1
+
+    # 원리금균등상환
+    def cal_method2(amount, period, rate):
+
+        rate = float(rate)/12.0
+
+        # X : 월 원리금균등상환금액
+        X = (amount * rate * ((1 + rate)**period)) / (((1 + rate)**period) - 1)
+        interest2_table = pd.DataFrame({'대출경과월' : np.arange(1, period + 1 , 1)}) # 대출경과월 셋팅 1 ~ 36 개월
+        interest2_table["원리금균등상환액"] = X # 위에서 산출한 월 원리금균등상환금액 삽입
+
+        # 매월 원금납입액, 이자납입액, 이자납입비율 산출
+        for i in range(interest2_table["대출경과월"].size) :
+            interest2_table.loc[i, "원금납입액"] = interest2_table.loc[i,"원리금균등상환액"] / ((1 + rate)**(period - i))
+            interest2_table.loc[i, "이자납입액"] = interest2_table.loc[i,"원리금균등상환액"] - interest2_table.loc[i, "원금납입액"]
+        
+        return interest2_table
+
+    # 원금균등상환
+    def cal_method3(amount, period, rate):
+
+        rate=float(rate)/12.0# 연이율을 월 rate로 변환
+
+        # 대출경과월 세팅
+        table3 = pd.DataFrame({"대출경과월":range(period)}) + 1
+
+        # 매월 납입하는 이자액 계산
+        table3["원금납입액"] = round(amount / period)
+
+        # 마지막 납입월 보정
+        table3.loc[period-1,"원금납입액"] =math.floor(amount/period)
+
+        # 대출 경과월에 따른 대출잔액, 월이자납입금액 계산
+        for i in range(table3["대출경과월"].size) :
+            if i == 0 :
+                table3.loc[i, "대출잔액"] = round(amount - table3.loc[i,"원금납입액"])
+            else :
+                table3.loc[i, "대출잔액"] = round(table3.loc[i-1, "대출잔액"] - table3.loc[i, "원금납입액"]) 
+                table3.loc[i, "월이자납입금액"] = table3.loc[i, "대출잔액"] * rate
+            
+        # 대출상환표 출력
+        return table3
+
+    '''
+    첫번째 상품 출력 코드
+    '''
+    if method == 1:
+        return "상품6 - 만기일시상환" + '\n' + cal_method1(amount, period, cal_6()).to_string() + '\n'\
+            + "상품7 - 만기일시상환" + '\n' + cal_method1(amount, period, cal_7()).to_string() + '\n'\
+            + "상품8 - 만기일시상환" + '\n' + cal_method1(amount, period, cal_8()).to_string() + '\n'\
+            + "상품10 - 만기일시상환" + '\n' + cal_method1(amount, period, cal_10()).to_string() + '\n'\
+            + "상품14 - 만기일시상환" + '\n' + cal_method1(amount, period, cal_14()).to_string()
+    elif method == 2:
+        return "상품6 - 원리금균등상환" + '\n' + cal_method2(amount, period, cal_6()).to_string() + '\n'\
+            + "상품7 - 원리금균등상환" + '\n' + cal_method2(amount, period, cal_7()).to_string() + '\n'\
+            + "상품8 - 원리금균등상환" + '\n' + cal_method2(amount, period, cal_8()).to_string() + '\n'\
+            + "상품10 - 원리금균등상환" + '\n' + cal_method2(amount, period, cal_10()).to_string() + '\n'\
+            + "상품14 - 원리금균등상환" + '\n' + cal_method2(amount, period, cal_14()).to_string()
+    elif method == 3:
+        return "상품6 - 원금균등상환" + '\n' + cal_method3(amount, period, cal_6()).to_string() + '\n'\
+            + "상품7 - 원금균등상환" + '\n' + cal_method3(amount, period, cal_7()).to_string() + '\n'\
+            + "상품8 - 원금균등상환" + '\n' + cal_method3(amount, period, cal_8()).to_string() + '\n'\
+            + "상품10 - 원금균등상환" + '\n' + cal_method3(amount, period, cal_10()).to_string() + '\n'\
+            + "상품14 - 원금균등상환" + '\n' + cal_method3(amount, period, cal_14()).to_string()
+    else:
+        return "계산이 잘못되었습니다."
+
+
+
+
+
+#전세계산_output
+def calc_borrow_year():
+    body = request.get_json()
+    print(body)
+    params_df = body['action']['params']
+    print(type(params_df))
+    # opt_operator = params_df['division']
+    number01 = json.loads(params_df['sys_number01'])['amount']
+    number02 = json.loads(params_df['sys_number02'])['amount']
+    number03 = json.loads(params_df['sys_number03'])['amount']
+    number04 = json.loads(params_df['sys_number04'])['amount']
+    number05 = json.loads(params_df['sys_number05'])['amount']
+    print('==========전세 계산기===========',number01,number02,number03,number04,number05,'============================')
+    # print(opt_operator, type(opt_operator), number01, type(number01))
+
+    answer_text = str(calc_borrow_year(number01, number02,number03,number04))
+
+    responseBody = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": answer_text
+                    }
+                }
+            ]
+        }
+    }
+
+    return responseBody
+
 
 # #월세계산_input
 # def calc_borrow_month():
 #     return "pass"
 
-
-
-# #전세계산_output
-# def calc_borrow_year():
-#     return "pass"
 
 # #월세계산_output
 # def calc_borrow_month():

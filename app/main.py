@@ -292,7 +292,7 @@ def test_calc(amount, period, rate):
             interest1_table.loc[i, "대출잔액"] = round(interest1_table.loc[i-1, "대출잔액"] - interest1_table.loc[i, "원금납입액"]) 
             interest1_table.loc[i, "월이자납입금액"] = interest1_table.loc[i, "대출잔액"] * rate
         
-            
+    print (interest1_table)
     # 대출상환표 출력
     return interest1_table
 

@@ -1182,8 +1182,9 @@ def search_pro_borrow(number01,number02,number03,number04,number05):
     cursor = db.cursor()
     cursor.execute('SELECT * FROM realzip')
     rows=cursor.fetchall()
-    lit=[]
+    str_return = ""
     for i in range(len(i_lst)):
-               
-        string=list(rows[i_lst[i]-1])
-        print(string)
+        for j, st in enumerate(rows[i_lst[i]-1]):
+            str_return = str_return + str(st) + "\n"
+        str_return = str_return + "\n"
+    return str_return

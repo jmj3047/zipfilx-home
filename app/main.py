@@ -405,22 +405,24 @@ def calc_pro_buy(number01, number02, number03, number04):
         period = period*12
         m_rate = float(y_rate)/12.0
 
-        # 대출경과월 세팅
-        table1 = pd.DataFrame({"대출경과월":range(period)}) + 1
+        # 월 세팅
+        table1 = pd.DataFrame({"월":range(period)}) + 1
 
         # 매월 납입하는 이자액 계산
-        table1["월이자납입금액"] = amount * m_rate
+        table1["이자납입액"] = amount * m_rate
 
         # 대출 경과월에 따른 대출잔액 및 월이자납입금액 계산
-        for i in range(table1["대출경과월"].size) :
-            if table1.loc[i,"대출경과월"] == period :
+        for i in range(table1["월"].size) :
+            if table1.loc[i,"월"] == period :
                 table1.loc[i, "대출잔액"] = 0 
-                table1.loc[i, "월이자납입금액"] = 0
+                table1.loc[i, "이자납입액"] = 0
             else :
                 table1.loc[i, "대출잔액"] = amount
-        
-        table1.set_index('대출경과월', inplace=True)
-        return [table1.head(10).to_string(), y_rate, np.nansum(table1["월이자납입금액"])]
+        table1["대출잔액"] = round(table1["대출잔액"] * 10000)
+        table1["이자납입액"] = round(table1["이자납입액"] * 10000)
+        table1.set_index('월', inplace=True)
+        pd.options.display.float_format = '{:,}'.format
+        return ["만기일시상환", y_rate, np.nansum(table1["이자납입액"])]
 
     # 원리금균등상환
     def cal_method2(amount, period, y_rate):
@@ -429,122 +431,113 @@ def calc_pro_buy(number01, number02, number03, number04):
 
         # X : 월 원리금균등상환금액
         X = (amount * m_rate * ((1 + m_rate)**period)) / (((1 + m_rate)**period) - 1)
-        table2 = pd.DataFrame({'대출경과월' : np.arange(1, period + 1 , 1)}) # 대출경과월 셋팅 1 ~ 36 개월
-        table2["원리금균등상환액"] = X # 위에서 산출한 월 원리금균등상환금액 삽입
+        table2 = pd.DataFrame({'월' : np.arange(1, period + 1 , 1)}) # 월 셋팅 1 ~ 36 개월
+        table2["월 상환액"] = X # 위에서 산출한 월 원리금균등상환금액 삽입
 
         # 매월 원금납입액, 이자납입액, 이자납입비율 산출
-        for i in range(table2["대출경과월"].size) :
-            table2.loc[i, "원금납입액"] = table2.loc[i,"원리금균등상환액"] / ((1 + m_rate)**(period - i))
-            table2.loc[i, "이자납입액"] = table2.loc[i,"원리금균등상환액"] - table2.loc[i, "원금납입액"]
+        for i in range(table2["월"].size) :
+            table2.loc[i, "원금납입액"] = table2.loc[i,"월 상환액"] / ((1 + m_rate)**(period - i))
+            table2.loc[i, "이자납입액"] = table2.loc[i,"월 상환액"] - table2.loc[i, "원금납입액"]
         
-        table2.set_index('대출경과월', inplace=True)
-        return [table2.head(10).to_string(), y_rate, np.nansum(table2["이자납입액"])]
+        table2["월 상환액"] = round(table2["월 상환액"] * 10000)
+        table2["원금납입액"] = round(table2["원금납입액"] * 10000)
+        table2["이자납입액"] = round(table2["이자납입액"] * 10000)
+        table2.set_index('월', inplace=True)
+        table2 = table2[["원금납입액", "이자납입액", "월 상환액"]]
+        pd.options.display.float_format = '{:,}'.format
+        return ["원리금균등상환", table2.head(10).to_string(), y_rate, np.nansum(table2["이자납입액"])]
 
     # 원금균등상환
     def cal_method3(amount, period, y_rate):
         period = period*12
-        m_rate=float(y_rate)/12.0# 연이율을 월 rate로 변환
+        m_rate = float(y_rate)/12.0# 연이율을 월 rate로 변환
 
-        # 대출경과월 세팅
-        table3 = pd.DataFrame({"대출경과월":range(period)}) + 1
+        # 월 세팅
+        table3 = pd.DataFrame({"월":range(period)}) + 1
 
         # 매월 납입하는 이자액 계산
         table3["원금납입액"] = round(amount / period)
 
-        # 마지막 납입월 보정
-        table3.loc[period-1,"원금납입액"] =math.floor(amount/period)
-
         # 대출 경과월에 따른 대출잔액, 월이자납입금액 계산
-        for i in range(table3["대출경과월"].size) :
+        for i in range(table3["월"].size) :
             if i == 0 :
                 table3.loc[i, "대출잔액"] = round(amount - table3.loc[i,"원금납입액"])
             else :
                 table3.loc[i, "대출잔액"] = round(table3.loc[i-1, "대출잔액"] - table3.loc[i, "원금납입액"]) 
-                table3.loc[i, "월이자납입금액"] = table3.loc[i, "대출잔액"] * m_rate
-            
-        table3.set_index('대출경과월', inplace=True)
-        return [table3.head(10).to_string(), y_rate, np.nansum(table3["월이자납입금액"])]
+                table3.loc[i, "이자납입액"] = table3.loc[i, "대출잔액"] * m_rate
+         
+        table3["원금납입액"] = round(table3["원금납입액"] * 10000.0)
+        table3["이자납입액"] = round(table3["이자납입액"] * 10000)
+        table3["대출잔액"] = round(table3["대출잔액"] * 10000)
+        table3.set_index('월', inplace=True)
+        table3 = table3[["원금납입액", "이자납입액", "대출잔액"]]
+        pd.options.display.float_format = '{:,}'.format
+        return ["원금균등상환", table3.head(10).to_string(), y_rate, np.nansum(table3["이자납입액"])]
 
     '''
     첫번째 상품 출력 코드
     '''
     if method == 1:
-        df1, rate1, tot1 = cal_method1(amount, period, cal_1())
-        df2, rate2, tot2 = cal_method1(amount, period, cal_2())
-        df3, rate3, tot3 = cal_method1(amount, period, cal_3())
-        df4, rate4, tot4 = cal_method1(amount, period, cal_4())
-        df5, rate5, tot5 = cal_method1(amount, period, cal_5())
-        return m_lst[0] + "(만기일시상환)" + '\n' + df1 + '\n'\
-            + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[1] + "(만기일시상환)" + '\n' + df2 + '\n'\
-            + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[2] + "(만기일시상환)" + '\n' + df3 + '\n'\
-            + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[3] + "(만기일시상환)" + '\n' + df4 + '\n'\
-            + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[4] + "(만기일시상환)" + '\n' + df5 + '\n'\
-            + "적용 금리 : " + str(round(rate5*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot5*10000,-2)):,}' + "원" + '\n\n'
+        str_mtd, rate1, tot1 = cal_method1(amount, period, cal_1())
+        str_mtd, rate2, tot2 = cal_method1(amount, period, cal_2())
+        str_mtd, rate3, tot3 = cal_method1(amount, period, cal_3())
+        str_mtd, rate4, tot4 = cal_method1(amount, period, cal_4())
+        str_mtd, rate5, tot5 = cal_method1(amount, period, cal_5())
+        df1, df2, df3, df4, df5 = ["","","","", ""]
     elif method == 2:
-        df1, rate1, tot1 = cal_method2(amount, period, cal_1())
-        df2, rate2, tot2 = cal_method2(amount, period, cal_2())
-        df3, rate3, tot3 = cal_method2(amount, period, cal_3())
-        df4, rate4, tot4 = cal_method2(amount, period, cal_4())
-        df5, rate5, tot5 = cal_method2(amount, period, cal_5())
-        return m_lst[0] + "(원리금균등상환)" + '\n' + df1 + '\n'\
-            + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[1] + "(원리금균등상환)" + '\n' + df2 + '\n'\
-            + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[2] + "(원리금균등상환)" + '\n' + df3 + '\n'\
-            + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[3] + "(원리금균등상환)" + '\n' + df4 + '\n'\
-            + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[4] + "(원리금균등상환)" + '\n' + df5 + '\n'\
-            + "적용 금리 : " + str(round(rate5*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot5*10000,-2)):,}' + "원" + '\n\n'
+        str_mtd, df1, rate1, tot1 = cal_method2(amount, period, cal_1())
+        str_mtd, df2, rate2, tot2 = cal_method2(amount, period, cal_2())
+        str_mtd, df3, rate3, tot3 = cal_method2(amount, period, cal_3())
+        str_mtd, df4, rate4, tot4 = cal_method2(amount, period, cal_4())
+        str_mtd, df5, rate5, tot5 = cal_method2(amount, period, cal_5())
     elif method == 3:
-        df1, rate1, tot1 = cal_method3(amount, period, cal_1())
-        df2, rate2, tot2 = cal_method3(amount, period, cal_2())
-        df3, rate3, tot3 = cal_method3(amount, period, cal_3())
-        df4, rate4, tot4 = cal_method3(amount, period, cal_4())
-        df5, rate5, tot5 = cal_method3(amount, period, cal_5())
-        return m_lst[0] + "(원금균등상환)" + '\n' + df1 + '\n'\
-            + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[1] + "(원금균등상환)" + '\n' + df2 + '\n'\
-            + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[2] + "(원금균등상환)" + '\n' + df3 + '\n'\
-            + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[3] + "(원금균등상환)" + '\n' + df4 + '\n'\
-            + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + m_lst[4] + "(원금균등상환)" + '\n' + df5 + '\n'\
-            + "적용 금리 : " + str(round(rate5*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot5*10000,-2)):,}' + "원" + '\n\n'
-    else:
-        return "계산이 잘못되었습니다."
+        str_mtd, df1, rate1, tot1 = cal_method3(amount, period, cal_1())
+        str_mtd, df2, rate2, tot2 = cal_method3(amount, period, cal_2())
+        str_mtd, df3, rate3, tot3 = cal_method3(amount, period, cal_3())
+        str_mtd, df4, rate4, tot4 = cal_method3(amount, period, cal_4())
+        str_mtd, df5, rate5, tot5 = cal_method3(amount, period, cal_5())
+    
+    str_return = m_lst[0] + '\n'\
+        + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+        + "대출기간 : " + str(period) + "년" + '\n'\
+        + "상환방법 : " + str_mtd + '\n'\
+        + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
+        + "총 이자액 : " + f'{int(round(tot1)):,}' + "원" + '\n'\
+        + df1 + '\n'\
+        + "\n-----------------------------\n"\
+        + m_lst[1] + '\n'\
+        + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+        + "대출기간 : " + str(period) + "년" + '\n'\
+        + "상환방법 : " + str_mtd + '\n'\
+        + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
+        + "총 이자액 : " + f'{int(round(tot2)):,}' + "원" + '\n'\
+        + df2 + '\n'\
+        + "\n-----------------------------\n"\
+        + m_lst[2] + '\n'\
+        + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+        + "대출기간 : " + str(period) + "년" + '\n'\
+        + "상환방법 : " + str_mtd + '\n'\
+        + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
+        + "총 이자액 : " + f'{int(round(tot3)):,}' + "원" + '\n'\
+        + df3 + '\n'\
+        + "\n-----------------------------\n"\
+        + m_lst[3] + '\n'\
+        + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+        + "대출기간 : " + str(period) + "년" + '\n'\
+        + "상환방법 : " + str_mtd + '\n'\
+        + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
+        + "총 이자액 : " + f'{int(round(tot4)):,}' + "원" + '\n'\
+        + df4 + '\n'\
+        + "\n-----------------------------\n"\
+        + m_lst[4] + '\n'\
+        + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+        + "대출기간 : " + str(period) + "년" + '\n'\
+        + "상환방법 : " + str_mtd + '\n'\
+        + "적용 금리 : " + str(round(rate5*100,2)) + "%" + '\n'\
+        + "총 이자액 : " + f'{int(round(tot5)):,}' + "원" + '\n'\
+        + df5 + '\n'
+
+    return str_return
 
 
 #매매계산_output
@@ -610,10 +603,8 @@ def calc_pro_year(number01, number02, number03, number04,number05):
             ind = 0
         elif income <= 4000:
             ind = 1
-        elif income <= 6000:
-            ind = 2
         else:
-            ind = 0
+            ind = 2
 
         if deposit <= 5000:
             col =  0
@@ -621,10 +612,8 @@ def calc_pro_year(number01, number02, number03, number04,number05):
             col =  1
         elif deposit <= 15000:
             col =  2
-        elif deposit > 15000:
-            col =  3
         else:
-            col = 0
+            col = 3
 
         interest = df6.iloc[ind,col]
 
@@ -646,10 +635,8 @@ def calc_pro_year(number01, number02, number03, number04,number05):
             ind = 0
         elif income <= 4000:
             ind = 1
-        elif income <= 6000:
-            ind = 2
         else:
-            ind = 0
+            ind = 2
 
         if deposit <= 5000:
             col =  0
@@ -691,7 +678,7 @@ def calc_pro_year(number01, number02, number03, number04,number05):
         if amount <= 5000 and deposit <= 7000:
             interest = select() - 0.003
             return interest
-        elif (amount <= 7000 or amount <= deposit * 0.8) and deposit <=10000:
+        elif amount <= min(7000, deposit*0.8):
             interest = select()
             return interest
         else:
@@ -712,22 +699,24 @@ def calc_pro_year(number01, number02, number03, number04,number05):
         period = period*12
         m_rate = float(y_rate)/12.0
 
-        # 대출경과월 세팅
-        table1 = pd.DataFrame({"대출경과월":range(period)}) + 1
+        # 월 세팅
+        table1 = pd.DataFrame({"월":range(period)}) + 1
 
         # 매월 납입하는 이자액 계산
-        table1["월이자납입금액"] = amount * m_rate
+        table1["이자납입액"] = amount * m_rate
 
         # 대출 경과월에 따른 대출잔액 및 월이자납입금액 계산
-        for i in range(table1["대출경과월"].size) :
-            if table1.loc[i,"대출경과월"] == period :
+        for i in range(table1["월"].size) :
+            if table1.loc[i,"월"] == period :
                 table1.loc[i, "대출잔액"] = 0 
-                table1.loc[i, "월이자납입금액"] = 0
+                table1.loc[i, "이자납입액"] = 0
             else :
                 table1.loc[i, "대출잔액"] = amount
-        
-        table1.set_index('대출경과월', inplace=True)
-        return [table1.head(10).to_string(), y_rate, np.nansum(table1["월이자납입금액"])]
+        table1["대출잔액"] = round(table1["대출잔액"] * 10000)
+        table1["이자납입액"] = round(table1["이자납입액"] * 10000)
+        table1.set_index('월', inplace=True)
+        pd.options.display.float_format = '{:,}'.format
+        return ["만기일시상환", y_rate, np.nansum(table1["이자납입액"])]
 
     # 원리금균등상환
     def cal_method2(amount, period, y_rate):
@@ -736,122 +725,151 @@ def calc_pro_year(number01, number02, number03, number04,number05):
 
         # X : 월 원리금균등상환금액
         X = (amount * m_rate * ((1 + m_rate)**period)) / (((1 + m_rate)**period) - 1)
-        table2 = pd.DataFrame({'대출경과월' : np.arange(1, period + 1 , 1)}) # 대출경과월 셋팅 1 ~ 36 개월
-        table2["원리금균등상환액"] = X # 위에서 산출한 월 원리금균등상환금액 삽입
+        table2 = pd.DataFrame({'월' : np.arange(1, period + 1 , 1)}) # 월 셋팅 1 ~ 36 개월
+        table2["월 상환액"] = X # 위에서 산출한 월 원리금균등상환금액 삽입
 
         # 매월 원금납입액, 이자납입액, 이자납입비율 산출
-        for i in range(table2["대출경과월"].size) :
-            table2.loc[i, "원금납입액"] = table2.loc[i,"원리금균등상환액"] / ((1 + m_rate)**(period - i))
-            table2.loc[i, "이자납입액"] = table2.loc[i,"원리금균등상환액"] - table2.loc[i, "원금납입액"]
+        for i in range(table2["월"].size) :
+            table2.loc[i, "원금납입액"] = table2.loc[i,"월 상환액"] / ((1 + m_rate)**(period - i))
+            table2.loc[i, "이자납입액"] = table2.loc[i,"월 상환액"] - table2.loc[i, "원금납입액"]
         
-        table2.set_index('대출경과월', inplace=True)
-        return [table2.head(10).to_string(), y_rate, np.nansum(table2["이자납입액"])]
+        table2["월 상환액"] = round(table2["월 상환액"] * 10000)
+        table2["원금납입액"] = round(table2["원금납입액"] * 10000)
+        table2["이자납입액"] = round(table2["이자납입액"] * 10000)
+        table2.set_index('월', inplace=True)
+        table2 = table2[["원금납입액", "이자납입액", "월 상환액"]]
+        pd.options.display.float_format = '{:,}'.format
+        return ["원리금균등상환", table2.head(10).to_string(), y_rate, np.nansum(table2["이자납입액"])]
 
     # 원금균등상환
     def cal_method3(amount, period, y_rate):
         period = period*12
-        m_rate=float(y_rate)/12.0# 연이율을 월 rate로 변환
+        m_rate = float(y_rate)/12.0# 연이율을 월 rate로 변환
 
-        # 대출경과월 세팅
-        table3 = pd.DataFrame({"대출경과월":range(period)}) + 1
+        # 월 세팅
+        table3 = pd.DataFrame({"월":range(period)}) + 1
 
         # 매월 납입하는 이자액 계산
         table3["원금납입액"] = round(amount / period)
 
-        # 마지막 납입월 보정
-        table3.loc[period-1,"원금납입액"] =math.floor(amount/period)
-
         # 대출 경과월에 따른 대출잔액, 월이자납입금액 계산
-        for i in range(table3["대출경과월"].size) :
+        for i in range(table3["월"].size) :
             if i == 0 :
                 table3.loc[i, "대출잔액"] = round(amount - table3.loc[i,"원금납입액"])
             else :
                 table3.loc[i, "대출잔액"] = round(table3.loc[i-1, "대출잔액"] - table3.loc[i, "원금납입액"]) 
-                table3.loc[i, "월이자납입금액"] = table3.loc[i, "대출잔액"] * m_rate
-            
-        table3.set_index('대출경과월', inplace=True)
-        return [table3.head(10).to_string(), y_rate, np.nansum(table3["월이자납입금액"])]
+                table3.loc[i, "이자납입액"] = table3.loc[i, "대출잔액"] * m_rate
+         
+        table3["원금납입액"] = round(table3["원금납입액"] * 10000.0)
+        table3["이자납입액"] = round(table3["이자납입액"] * 10000)
+        table3["대출잔액"] = round(table3["대출잔액"] * 10000)
+        table3.set_index('월', inplace=True)
+        table3 = table3[["원금납입액", "이자납입액", "대출잔액"]]
+        pd.options.display.float_format = '{:,}'.format
+        return ["원금균등상환", table3.head(10).to_string(), y_rate, np.nansum(table3["이자납입액"])]
 
     '''
     첫번째 상품 출력 코드
     '''
-    if method == 1:
-        df1, rate1, tot1 = cal_method1(amount, period, cal_6())
-        df2, rate2, tot2 = cal_method1(amount, period, cal_7())
-        df3, rate3, tot3 = cal_method1(amount, period, cal_8())
-        df4, rate4, tot4 = cal_method1(amount, period, cal_10())
-        df5, rate5, tot5 = cal_method1(amount, period, cal_14())
-        return j_lst[0] + "(만기일시상환)" + '\n' + df1 + '\n'\
+    if amount <= min(7000, deposit*0.8):
+        if method == 1:
+            str_mtd, rate1, tot1 = cal_method1(amount, period, cal_6())
+            str_mtd, rate2, tot2 = cal_method1(amount, period, cal_7())
+            str_mtd, rate3, tot3 = cal_method1(amount, period, cal_8())
+            str_mtd, rate4, tot4 = cal_method1(amount, period, cal_10())
+            str_mtd, rate5, tot5 = cal_method1(amount, period, cal_14())
+            df1, df2, df3, df4, df5 = ["","","","", ""]
+        elif method == 2:
+            str_mtd, df1, rate1, tot1 = cal_method2(amount, period, cal_6())
+            str_mtd, df2, rate2, tot2 = cal_method2(amount, period, cal_7())
+            str_mtd, df3, rate3, tot3 = cal_method2(amount, period, cal_8())
+            str_mtd, df4, rate4, tot4 = cal_method2(amount, period, cal_10())
+            str_mtd, df5, rate5, tot5 = cal_method2(amount, period, cal_14())
+        elif method == 3:
+            str_mtd, df1, rate1, tot1 = cal_method3(amount, period, cal_6())
+            str_mtd, df2, rate2, tot2 = cal_method3(amount, period, cal_7())
+            str_mtd, df3, rate3, tot3 = cal_method3(amount, period, cal_8())
+            str_mtd, df4, rate4, tot4 = cal_method3(amount, period, cal_10())
+            str_mtd, df5, rate5, tot5 = cal_method3(amount, period, cal_14())
+        
+        str_return = j_lst[0] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot1)):,}' + "원" + '\n'\
+            + df1 + '\n'\
             + "\n-----------------------------\n"\
-            + j_lst[1] + "(만기일시상환)" + '\n' + df2 + '\n'\
+            + j_lst[1] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot2)):,}' + "원" + '\n'\
+            + df2 + '\n'\
             + "\n-----------------------------\n"\
-            + j_lst[2] + "(만기일시상환)" + '\n' + df3 + '\n'\
+            + j_lst[2] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot3)):,}' + "원" + '\n'\
+            + df3 + '\n'\
             + "\n-----------------------------\n"\
-            + j_lst[3] + "(만기일시상환)" + '\n' + df4 + '\n'\
+            + j_lst[3] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot4)):,}' + "원" + '\n'\
+            + df4 + '\n'\
             + "\n-----------------------------\n"\
-            + j_lst[4] + "(만기일시상환)" + '\n' + df5 + '\n'\
+            + j_lst[4] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate5*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot5*10000,-2)):,}' + "원" + '\n\n'
-    elif method == 2:
-        df1, rate1, tot1 = cal_method2(amount, period, cal_6())
-        df2, rate2, tot2 = cal_method2(amount, period, cal_7())
-        df3, rate3, tot3 = cal_method2(amount, period, cal_8())
-        df4, rate4, tot4 = cal_method2(amount, period, cal_10())
-        df5, rate5, tot5 = cal_method2(amount, period, cal_14())
-        return j_lst[0] + "(원리금균등상환)" + '\n' + df1 + '\n'\
-            + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + j_lst[1] + "(원리금균등상환)" + '\n' + df2 + '\n'\
-            + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + j_lst[2] + "(원리금균등상환)" + '\n' + df3 + '\n'\
-            + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + j_lst[3] + "(원리금균등상환)" + '\n' + df4 + '\n'\
-            + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + j_lst[4] + "(원리금균등상환)" + '\n' + df5 + '\n'\
-            + "적용 금리 : " + str(round(rate5*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot5*10000,-2)):,}' + "원" + '\n\n'
-    elif method == 3:
-        df1, rate1, tot1 = cal_method3(amount, period, cal_6())
-        df2, rate2, tot2 = cal_method3(amount, period, cal_7())
-        df3, rate3, tot3 = cal_method3(amount, period, cal_8())
-        df4, rate4, tot4 = cal_method3(amount, period, cal_10())
-        df5, rate5, tot5 = cal_method3(amount, period, cal_14())
-        return j_lst[0] + "(원금균등상환)" + '\n' + df1 + '\n'\
-            + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + j_lst[1] + "(원금균등상환)" + '\n' + df2 + '\n'\
-            + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + j_lst[2] + "(원금균등상환)" + '\n' + df3 + '\n'\
-            + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + j_lst[3] + "(원금균등상환)" + '\n' + df4 + '\n'\
-            + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + j_lst[4] + "(원금균등상환)" + '\n' + df5 + '\n'\
-            + "적용 금리 : " + str(round(rate5*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot5*10000,-2)):,}' + "원" + '\n\n'
+            + "총 이자액 : " + f'{int(round(tot5)):,}' + "원" + '\n'\
+            + df5 + '\n'
     else:
-        return "계산이 잘못되었습니다."
+        if method == 1:
+            str_mtd, rate1, tot1 = cal_method1(amount, period, cal_6())
+            str_mtd, rate2, tot2 = cal_method1(amount, period, cal_7())
+            str_mtd, rate3, tot3 = cal_method1(amount, period, cal_8())
+            df1, df2, df3, df4, df5 = ["","","","", ""]
+        elif method == 2:
+            str_mtd, df1, rate1, tot1 = cal_method2(amount, period, cal_6())
+            str_mtd, df2, rate2, tot2 = cal_method2(amount, period, cal_7())
+            str_mtd, df3, rate3, tot3 = cal_method2(amount, period, cal_8())
+        elif method == 3:
+            str_mtd, df1, rate1, tot1 = cal_method3(amount, period, cal_6())
+            str_mtd, df2, rate2, tot2 = cal_method3(amount, period, cal_7())
+            str_mtd, df3, rate3, tot3 = cal_method3(amount, period, cal_8())
+        
+        str_return = j_lst[0] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
+            + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot1)):,}' + "원" + '\n'\
+            + df1 + '\n'\
+            + "\n-----------------------------\n"\
+            + j_lst[1] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
+            + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot2)):,}' + "원" + '\n'\
+            + df2 + '\n'\
+            + "\n-----------------------------\n"\
+            + j_lst[2] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
+            + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot3)):,}' + "원" + '\n'\
+            + df3 + '\n'
+    return str_return
 
 
 #전세계산_output
@@ -949,22 +967,24 @@ def calc_pro_month(number01,number02,number03):
         period = period*12
         m_rate = float(y_rate)/12.0
 
-        # 대출경과월 세팅
-        table1 = pd.DataFrame({"대출경과월":range(period)}) + 1
+        # 월 세팅
+        table1 = pd.DataFrame({"월":range(period)}) + 1
 
         # 매월 납입하는 이자액 계산
-        table1["월이자납입금액"] = amount * m_rate
+        table1["이자납입액"] = amount * m_rate
 
         # 대출 경과월에 따른 대출잔액 및 월이자납입금액 계산
-        for i in range(table1["대출경과월"].size) :
-            if table1.loc[i,"대출경과월"] == period :
+        for i in range(table1["월"].size) :
+            if table1.loc[i,"월"] == period :
                 table1.loc[i, "대출잔액"] = 0 
-                table1.loc[i, "월이자납입금액"] = 0
+                table1.loc[i, "이자납입액"] = 0
             else :
                 table1.loc[i, "대출잔액"] = amount
-        
-        table1.set_index('대출경과월', inplace=True)
-        return [table1.head(10).to_string(), y_rate, np.nansum(table1["월이자납입금액"])]
+        table1["대출잔액"] = round(table1["대출잔액"] * 10000)
+        table1["이자납입액"] = round(table1["이자납입액"] * 10000)
+        table1.set_index('월', inplace=True)
+        pd.options.display.float_format = '{:,}'.format
+        return ["만기일시상환", y_rate, np.nansum(table1["이자납입액"])]
 
     # 원리금균등상환
     def cal_method2(amount, period, y_rate):
@@ -973,107 +993,120 @@ def calc_pro_month(number01,number02,number03):
 
         # X : 월 원리금균등상환금액
         X = (amount * m_rate * ((1 + m_rate)**period)) / (((1 + m_rate)**period) - 1)
-        table2 = pd.DataFrame({'대출경과월' : np.arange(1, period + 1 , 1)}) # 대출경과월 셋팅 1 ~ 36 개월
-        table2["원리금균등상환액"] = X # 위에서 산출한 월 원리금균등상환금액 삽입
+        table2 = pd.DataFrame({'월' : np.arange(1, period + 1 , 1)}) # 월 셋팅 1 ~ 36 개월
+        table2["월 상환액"] = X # 위에서 산출한 월 원리금균등상환금액 삽입
 
         # 매월 원금납입액, 이자납입액, 이자납입비율 산출
-        for i in range(table2["대출경과월"].size) :
-            table2.loc[i, "원금납입액"] = table2.loc[i,"원리금균등상환액"] / ((1 + m_rate)**(period - i))
-            table2.loc[i, "이자납입액"] = table2.loc[i,"원리금균등상환액"] - table2.loc[i, "원금납입액"]
+        for i in range(table2["월"].size) :
+            table2.loc[i, "원금납입액"] = table2.loc[i,"월 상환액"] / ((1 + m_rate)**(period - i))
+            table2.loc[i, "이자납입액"] = table2.loc[i,"월 상환액"] - table2.loc[i, "원금납입액"]
         
-        table2.set_index('대출경과월', inplace=True)
-        return [table2.head(10).to_string(), y_rate, np.nansum(table2["이자납입액"])]
+        table2["월 상환액"] = round(table2["월 상환액"] * 10000)
+        table2["원금납입액"] = round(table2["원금납입액"] * 10000)
+        table2["이자납입액"] = round(table2["이자납입액"] * 10000)
+        table2.set_index('월', inplace=True)
+        table2 = table2[["원금납입액", "이자납입액", "월 상환액"]]
+        pd.options.display.float_format = '{:,}'.format
+        return ["원리금균등상환", table2.head(10).to_string(), y_rate, np.nansum(table2["이자납입액"])]
 
     # 원금균등상환
     def cal_method3(amount, period, y_rate):
         period = period*12
-        m_rate=float(y_rate)/12.0# 연이율을 월 rate로 변환
+        m_rate = float(y_rate)/12.0# 연이율을 월 rate로 변환
 
-        # 대출경과월 세팅
-        table3 = pd.DataFrame({"대출경과월":range(period)}) + 1
+        # 월 세팅
+        table3 = pd.DataFrame({"월":range(period)}) + 1
 
         # 매월 납입하는 이자액 계산
         table3["원금납입액"] = round(amount / period)
 
-        # 마지막 납입월 보정
-        table3.loc[period-1,"원금납입액"] =math.floor(amount/period)
-
         # 대출 경과월에 따른 대출잔액, 월이자납입금액 계산
-        for i in range(table3["대출경과월"].size) :
+        for i in range(table3["월"].size) :
             if i == 0 :
                 table3.loc[i, "대출잔액"] = round(amount - table3.loc[i,"원금납입액"])
             else :
                 table3.loc[i, "대출잔액"] = round(table3.loc[i-1, "대출잔액"] - table3.loc[i, "원금납입액"]) 
-                table3.loc[i, "월이자납입금액"] = table3.loc[i, "대출잔액"] * m_rate
-            
-        table3.set_index('대출경과월', inplace=True)
-        return [table3.head(10).to_string(), y_rate, np.nansum(table3["월이자납입금액"])]
+                table3.loc[i, "이자납입액"] = table3.loc[i, "대출잔액"] * m_rate
+         
+        table3["원금납입액"] = round(table3["원금납입액"] * 10000.0)
+        table3["이자납입액"] = round(table3["이자납입액"] * 10000)
+        table3["대출잔액"] = round(table3["대출잔액"] * 10000)
+        table3.set_index('월', inplace=True)
+        table3 = table3[["원금납입액", "이자납입액", "대출잔액"]]
+        pd.options.display.float_format = '{:,}'.format
+        return ["원금균등상환", table3.head(10).to_string(), y_rate, np.nansum(table3["이자납입액"])]
 
     '''
     첫번째 상품 출력 코드
     '''
-    if method == 1:
-        df1, rate1, tot1 = cal_method1(amount, period, cal_9())
-        df2, rate2, tot2 = cal_method1(amount, period, cal_11())
-        df3, rate3, tot3 = cal_method1(amount, period, cal_12())
-        df4, rate4, tot4 = cal_method1(amount, period, cal_13())
-        return w_lst[0] + "(만기일시상환)" + '\n' + df1 + '\n'\
+    if amount <= 960:
+        if method == 1:
+            str_mtd, rate1, tot1 = cal_method1(amount, period, cal_9())
+            str_mtd, rate2, tot2 = cal_method1(amount, period, cal_11())
+            str_mtd, rate3, tot3 = cal_method1(amount, period, cal_12())
+            str_mtd, rate4, tot4 = cal_method1(amount, period, cal_13())
+            df1, df2, df3, df4 = ["","","",""]
+        elif method == 2:
+            str_mtd, df1, rate1, tot1 = cal_method2(amount, period, cal_9())
+            str_mtd, df2, rate2, tot2 = cal_method2(amount, period, cal_11())
+            str_mtd, df3, rate3, tot3 = cal_method2(amount, period, cal_12())
+            str_mtd, df4, rate4, tot4 = cal_method2(amount, period, cal_13())
+        elif method == 3:
+            str_mtd, df1, rate1, tot1 = cal_method3(amount, period, cal_9())
+            str_mtd, df2, rate2, tot2 = cal_method3(amount, period, cal_11())
+            str_mtd, df3, rate3, tot3 = cal_method3(amount, period, cal_12())
+            str_mtd, df4, rate4, tot4 = cal_method3(amount, period, cal_13())
+        
+        str_return = w_lst[0] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot1)):,}' + "원" + '\n'\
+            + df1 + '\n'\
             + "\n-----------------------------\n"\
-            + w_lst[1] + "(만기일시상환)" + '\n' + df2 + '\n'\
+            + w_lst[1] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot2)):,}' + "원" + '\n'\
+            + df2 + '\n'\
             + "\n-----------------------------\n"\
-            + w_lst[2] + "(만기일시상환)" + '\n' + df3 + '\n'\
+            + w_lst[2] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
+            + "총 이자액 : " + f'{int(round(tot3)):,}' + "원" + '\n'\
+            + df3 + '\n'\
             + "\n-----------------------------\n"\
-            + w_lst[3] + "(만기일시상환)" + '\n' + df4 + '\n'\
+            + w_lst[3] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n\n'
-    elif method == 2:
-        df1, rate1, tot1 = cal_method2(amount, period, cal_9())
-        df2, rate2, tot2 = cal_method2(amount, period, cal_11())
-        df3, rate3, tot3 = cal_method2(amount, period, cal_12())
-        df4, rate4, tot4 = cal_method2(amount, period, cal_13())
-        return w_lst[0] + "(원리금균등상환)" + '\n' + df1 + '\n'\
+            + "총 이자액 : " + f'{int(round(tot4)):,}' + "원" + '\n'\
+            + df4 + '\n'
+    elif amount <= 3500:
+        if method == 1:
+            str_mtd, rate1, tot1 = cal_method1(amount, period, cal_9())
+            df1 = ""
+        elif method == 2:
+            str_mtd, df1, rate1, tot1 = cal_method2(amount, period, cal_9())
+        elif method == 3:
+            str_mtd, df1, rate1, tot1 = cal_method3(amount, period, cal_9())
+
+        str_return = w_lst[0] + '\n'\
+            + "대출금액 : " + f'{amount*10000:,}' + "원" + '\n'\
+            + "대출기간 : " + str(period) + "년" + '\n'\
+            + "상환방법 : " + str_mtd + '\n'\
             + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + w_lst[1] + "(원리금균등상환)" + '\n' + df2 + '\n'\
-            + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + w_lst[2] + "(원리금균등상환)" + '\n' + df3 + '\n'\
-            + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + w_lst[3] + "(원리금균등상환)" + '\n' + df4 + '\n'\
-            + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n\n'
-    elif method == 3:
-        df1, rate1, tot1 = cal_method3(amount, period, cal_9())
-        df2, rate2, tot2 = cal_method3(amount, period, cal_11())
-        df3, rate3, tot3 = cal_method3(amount, period, cal_12())
-        df4, rate4, tot4 = cal_method3(amount, period, cal_13())
-        return w_lst[0] + "(원금균등상환)" + '\n' + df1 + '\n'\
-            + "적용 금리 : " + str(round(rate1*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot1*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + w_lst[1] + "(원금균등상환)" + '\n' + df2 + '\n'\
-            + "적용 금리 : " + str(round(rate2*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot2*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + w_lst[2] + "(원금균등상환)" + '\n' + df3 + '\n'\
-            + "적용 금리 : " + str(round(rate3*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot3*10000,-2)):,}' + "원" + '\n'\
-            + "\n-----------------------------\n"\
-            + w_lst[3] + "(원금균등상환)" + '\n' + df4 + '\n'\
-            + "적용 금리 : " + str(round(rate4*100,2)) + "%" + '\n'\
-            + "총 이자액 : " + f'{int(round(tot4*10000,-2)):,}' + "원" + '\n\n'
+            + "총 이자액 : " + f'{int(round(tot1)):,}' + "원" + '\n'\
+            + df1 + '\n'
     else:
-        return "계산이 잘못되었습니다."
+        str_return = "입력하신 대출금액이 상품의 한도를 초과하였습니다"
+    return str_return
 
 
 # #월세계산_output

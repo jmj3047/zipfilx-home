@@ -84,7 +84,6 @@ def search_pro_buy(number01,number02,number03,number04,number05):
     i3 = 3
     i4 = 4
     i5 = 5
-
     
     q1 = number01
     q2 = number02
@@ -111,11 +110,13 @@ def search_pro_buy(number01,number02,number03,number04,number05):
     cursor = db.cursor()
     cursor.execute('SELECT * FROM realzip')
     rows=cursor.fetchall()
-
     str_return = ""
     for i in range(len(i_lst)):
         for j, st in enumerate(rows[i_lst[i]-1]):
-            str_return = str_return + str(st) + "\n"
+            st_split = st.split(":", maxsplit=1)
+            str_return = str_return + str(j) + ") " + str(st_split[0]) + "\n"
+            if len(st_split)==2:
+                str_return = str_return + "- " + str(st_split[1]) + '\n'
         str_return = str_return + "\n"
     return str_return
 
@@ -166,6 +167,7 @@ def search_pro_borrow(number01,number02,number03,number04,number05):
     i12=12
     i13=13
     i14=14
+
     
     q1 = number01
     q2 = number02
@@ -199,9 +201,13 @@ def search_pro_borrow(number01,number02,number03,number04,number05):
     str_return = ""
     for i in range(len(i_lst)):
         for j, st in enumerate(rows[i_lst[i]-1]):
-            str_return = str_return + str(st) + "\n"
+            st_split = st.split(":", maxsplit=1)
+            str_return = str_return + str(j) + ") " + str(st_split[0]) + "\n"
+            if len(st_split)==2:
+                str_return = str_return + "- " + str(st_split[1]) + '\n'
         str_return = str_return + "\n"
     return str_return
+
 
 
 #전세조회_output

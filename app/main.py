@@ -118,7 +118,7 @@ def search_pro_buy(number01,number02,number03,number04,number05):
             if len(st_split)==2:
                 str_return = str_return + "- " + str(st_split[1]) + '\n'
         str_return = str_return + "\n"
-    return str_return
+    return "고객님은 총 "+ str(len(i_lst))+"개의 상품을 대출 가능합니다."+'\n\n'+ str_return
 
 
     
@@ -206,7 +206,7 @@ def search_pro_borrow(number01,number02,number03,number04,number05):
             if len(st_split)==2:
                 str_return = str_return + "- " + str(st_split[1]) + '\n'
         str_return = str_return + "\n"
-    return str_return
+    return "고객님은 총 "+ str(len(i_lst))+"개의 상품을 대출 가능합니다."+'\n\n'+ str_return
 
 
 

@@ -112,12 +112,13 @@ def search_pro_buy(number01,number02,number03,number04,number05):
     rows=cursor.fetchall()
     str_return = ""
     for i in range(len(i_lst)):
-        for j, st in enumerate(rows[i_lst[i]-1]):
+        str_return = str_return + str(i+1) + "." + "\n"
+        for st in (rows[i_lst[i]-1]):
             st_split = st.split(":", maxsplit=1)
-            str_return = str_return + str(j+1) + ") " + str(st_split[0]) + "\n"
+            str_return = str_return + "-" + ' ' + str(st_split[0]) + ":" + "\n"
             if len(st_split)==2:
-                str_return = str_return + "- " + str(st_split[1]) + '\n'
-        str_return = str_return + "\n"
+                str_return = str_return + ' ' + str(st_split[1]) + '\n'
+        str_return = str_return + "\n\n"
     return "고객님은 총 "+ str(len(i_lst))+"개의 상품을 대출 가능합니다."+'\n\n'+ str_return
 
 

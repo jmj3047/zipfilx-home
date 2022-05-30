@@ -200,7 +200,7 @@ def search_pro_borrow(number01,number02,number03,number04,number05):
     rows=cursor.fetchall()
     str_return = ""
     for i in range(len(i_lst)):
-        str_return = str_return + str(i) + "." + "\n"
+        str_return = str_return + str(i+1) + "." + "\n"
         for st in (rows[i_lst[i]-1]):
             st_split = st.split(":", maxsplit=1)
             str_return = str_return + "-" + ' ' + str(st_split[0]) + ":" + "\n"

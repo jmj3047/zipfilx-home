@@ -1,6 +1,6 @@
 # READ_ME
 
-[![Python](https://img.shields.io/badge/Python-3.10.4-3776AB)]
+![Python](https://img.shields.io/badge/Python-3.10.4-3776AB)
 [![Python](https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white)]
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.3-4169E1?logo=PostgreSQL&logoColor=white)]
 [![Heroku](https://img.shields.io/badge/Heroku-7.53.0-430098?logo=Heroku&logoColor=white)]

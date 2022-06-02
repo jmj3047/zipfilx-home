@@ -1,20 +1,20 @@
 # READ_ME
 
 ![Python](https://img.shields.io/badge/Python-3.10.4-3776AB)
-[![Python](https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white)]
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.3-4169E1?logo=PostgreSQL&logoColor=white)]
-[![Heroku](https://img.shields.io/badge/Heroku-7.53.0-430098?logo=Heroku&logoColor=white)]
-[![Keras](https://img.shields.io/badge/keras-2.8.0-D00000?logo=Keras&logoColor=white)]
-[![Numpy](https://img.shields.io/badge/Numpy-1.22.3-013243?logo=Numpy&logoColor=white)]
-[![Pandas](https://img.shields.io/badge/Pandas-1.4.2-150458?logo=pandas&logoColor=white)]
-[![Psycopg2](https://img.shields.io/badge/Psycopg2-2.9.3-430098)]
-[![Flask](https://img.shields.io/badge/Flask-2.1.2-000000?logo=Flask&logoColor=white)]
-[![Flask-python](https://img.shields.io/badge/Flask_python-3.9.2-000000?logo=Flask&logoColor=white)]
-[![gitdb](https://img.shields.io/badge/gitdb-4.0.9-F050320?logo=Git&logoColor=white)]
-[![jupyter](https://img.shields.io/badge/jupyter_client-7.1.2-F37626?logo=Jupyter&logoColor=white)]
-[![jupyter](https://img.shields.io/badge/jupyter_core-4.9.2-F37626?logo=Jupyter&logoColor=white)]
-[![Kakao](https://img.shields.io/badge/Kakao-Open_builder-FFCD00?logo=KakaoTalk&logoColor=white)]
-[![Kakao](https://img.shields.io/badge/Kakao-Open_builder-FFCD00?logo=Kakao&logoColor=white)]
+![Python](https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.3-4169E1?logo=PostgreSQL&logoColor=white)
+![Heroku](https://img.shields.io/badge/Heroku-7.53.0-430098?logo=Heroku&logoColor=white)
+![Keras](https://img.shields.io/badge/keras-2.8.0-D00000?logo=Keras&logoColor=white)
+![Numpy](https://img.shields.io/badge/Numpy-1.22.3-013243?logo=Numpy&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-1.4.2-150458?logo=pandas&logoColor=white)
+![Psycopg2](https://img.shields.io/badge/Psycopg2-2.9.3-430098)
+![Flask](https://img.shields.io/badge/Flask-2.1.2-000000?logo=Flask&logoColor=white)
+![Flask-python](https://img.shields.io/badge/Flask_python-3.9.2-000000?logo=Flask&logoColor=white)
+![gitdb](https://img.shields.io/badge/gitdb-4.0.9-F050320?logo=Git&logoColor=white)
+![jupyter](https://img.shields.io/badge/jupyter_client-7.1.2-F37626?logo=Jupyter&logoColor=white)
+![jupyter](https://img.shields.io/badge/jupyter_core-4.9.2-F37626?logo=Jupyter&logoColor=white)
+![Kakao](https://img.shields.io/badge/Kakao-Open_builder-FFCD00?logo=KakaoTalk&logoColor=white)
+
 
 # About
 

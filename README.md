@@ -17,8 +17,6 @@
 
 # About
 
-    본 프로젝트는 휴먼교육센터학원에서 진행된 프로젝트로 정해진 기간, 주제, 카카오톡챗봇을 이용하는 규칙에 따라 진행되었다.
-
     집플릭스는 무주택자를 위한 대출 상품 조회 및 금리계산서비스를 위한 카카오톡 챗봇서비스를 이용한 프로젝트이다.
 
     집플릭스는 Database로 PostgreSQL,pgAdmin 와 Webserver로 Heroku, 챗봇툴인 Kakao open builder를 연결시키기 위해 Python로 작성하여 Keras, numpy, pandas, psycopg2, Flask, GitPython 라이브러리를 사용하여 프로젝트가 진행되었다.

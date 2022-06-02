@@ -33,7 +33,6 @@
     
 
 ### Requirements.txt
-
     ```
     certifi==2021.10.8
     charset-normalizer==2.0.12
@@ -75,6 +74,7 @@
     사용
     $ python main.py
     ```
+    
 
 # Algorithm
 

@@ -34,7 +34,7 @@
 
 ### Requirements.txt
 
-```
+	```
 	certifi==2021.10.8
 	charset-normalizer==2.0.12
 	click==8.1.3
@@ -59,22 +59,22 @@
 	xlrd==2.0.1
 	zipp==3.8.0
 	psycopg2==2.8.6
-```
+	```
 
 ### How to Use
 
 ```python
-사용방법
-git clone ~..git
+	git clone
+	git clone ~..git
 
-가상환경 설치
-$ virtualenv venv
+	Install virtual environment
+	$ virtualenv venv
 
-라이브러리 설치
-$ pip install -r requirements.txt
+	Install library
+	$ pip install -r requirements.txt
 
-사용
-$ python main.py
+	Run
+	$ python main.py
 ```
   
 

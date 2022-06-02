@@ -1,6 +1,5 @@
 # READ_ME
 
-![Python](https://img.shields.io/badge/Python-3.10.4-3776AB)
 ![Python](https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.3-4169E1?logo=PostgreSQL&logoColor=white)
 ![Heroku](https://img.shields.io/badge/Heroku-7.53.0-430098?logo=Heroku&logoColor=white)
@@ -18,11 +17,11 @@
 
 # About
 
-본 프로젝트는 휴먼교육센터학원에서 진행된 프로젝트로 정해진 기간, 주제, 카카오톡챗봇을 이용하는 규칙에 따라 진행되었다.
+    본 프로젝트는 휴먼교육센터학원에서 진행된 프로젝트로 정해진 기간, 주제, 카카오톡챗봇을 이용하는 규칙에 따라 진행되었다.
 
-집플릭스는 무주택자를 위한 대출 상품 조회 및 금리계산서비스를 위한 카카오톡 챗봇서비스를 이용한 프로젝트이다.
+    집플릭스는 무주택자를 위한 대출 상품 조회 및 금리계산서비스를 위한 카카오톡 챗봇서비스를 이용한 프로젝트이다.
 
-집플릭스는 Database로 PostgreSQL,pgAdmin 와 Webserver로 Heroku, 챗봇툴인 Kakao open builder를 연결시키기 위해 Python로 작성하여 Keras, numpy, pandas, psycopg2, Flask, GitPython 라이브러리를 사용하여 프로젝트가 진행되었다.
+    집플릭스는 Database로 PostgreSQL,pgAdmin 와 Webserver로 Heroku, 챗봇툴인 Kakao open builder를 연결시키기 위해 Python로 작성하여 Keras, numpy, pandas, psycopg2, Flask, GitPython 라이브러리를 사용하여 프로젝트가 진행되었다.
 
 # Installation from sources
 
@@ -35,32 +34,47 @@
 
 ### Requirements.txt
 
-```
-certifi==2021.10.8
-charset-normalizer==2.0.12
-click==8.1.3
-colorama==0.4.4
-et-xmlfile==1.1.0
-Flask==2.1.2
-gunicorn==20.1.0
-idna==3.3
-importlib-metadata==4.11.3
-itsdangerous==2.1.2
-Jinja2==3.1.2
-MarkupSafe==2.1.1
-numpy==1.22.3
-openpyxl==3.0.9
-pandas==1.4.2
-python-dateutil==2.8.2
-pytz==2022.1
-requests==2.27.1
-six==1.16.0
-urllib3==1.26.9
-Werkzeug==2.1.2
-xlrd==2.0.1
-zipp==3.8.0
-psycopg2==2.8.6
-```
+    ```
+    certifi==2021.10.8
+    charset-normalizer==2.0.12
+    click==8.1.3
+    colorama==0.4.4
+    et-xmlfile==1.1.0
+    Flask==2.1.2
+    gunicorn==20.1.0
+    idna==3.3
+    importlib-metadata==4.11.3
+    itsdangerous==2.1.2
+    Jinja2==3.1.2
+    MarkupSafe==2.1.1
+    numpy==1.22.3
+    openpyxl==3.0.9
+    pandas==1.4.2
+    python-dateutil==2.8.2
+    pytz==2022.1
+    requests==2.27.1
+    six==1.16.0
+    urllib3==1.26.9
+    Werkzeug==2.1.2
+    xlrd==2.0.1
+    zipp==3.8.0
+    psycopg2==2.8.6
+    ```
+### How to Use
+    ```python
+    사용방법    
+    git clone ~..git
+
+
+    가상환경 설치
+    $ virtualenv venv
+
+    라이브러리 설치
+    $ pip install -r requirements.txt
+
+    사용
+    $ python main.py
+    ```
 
 # Algorithm
 

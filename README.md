@@ -1,6 +1,6 @@
 # READ_ME
 
-`[![Python][https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white](https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white))]
+[![Python][https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white](https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white))]
 [![PostgreSQL][https://img.shields.io/badge/PostgreSQL-14.3-4169E1?logo=PostgreSQL&logoColor=white](https://img.shields.io/badge/PostgreSQL-14.3-4169E1?logo=PostgreSQL&logoColor=white))]
 [![Heroku][https://img.shields.io/badge/Heroku-7.53.0-430098?logo=Heroku&logoColor=white](https://img.shields.io/badge/Heroku-7.53.0-430098?logo=Heroku&logoColor=white))]
 [![Keras][https://img.shields.io/badge/keras-2.8.0-D00000?logo=Keras&logoColor=white](https://img.shields.io/badge/keras-2.8.0-D00000?logo=Keras&logoColor=white))]
@@ -150,7 +150,7 @@ psycopg2==2.8.6
     
 - 위의 코드로 사용자의 db에 연동이 된다면, heroku sever를 통해, postgre SQL 에 탑재된 데이터를 자유자재로 이용 할 수 있다. 이후, Kakaotalk open builder를 통해 사용자의 input 을 제공받아, database를 이용하였다.
     
-    ![Untitled](READ_ME%203d4f34c9eaad445a8542279f98530d58/Untitled.png)
+    ![Untitled](https://github.com/jmj3047/zipfilx-home/blob/master/README/Untitled.png)
     
 
 # Sever

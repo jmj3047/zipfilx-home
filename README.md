@@ -170,12 +170,12 @@ psycopg2==2.8.6
 - [https://your_project_name.herokuapp.com/](https://your_project_name.herokuapp.com/)이 기본 형태이고 카카오톡에 업로드 할때는 
 스킬서버에 먼저 url([https://your_project_name.herokuapp.com/](https://your_project_name.herokuapp.com/)api/search_borrow) 올리고
     
-    ![Untitled](READ_ME%203d4f34c9eaad445a8542279f98530d58/Untitled%201.png)
+    ![Untitled](https://github.com/jmj3047/zipfilx-home/blob/master/README/Untitled%201.png)
     
 - 답변을 원하는 해당 시나리오 블록의 파라미터 설정에서 저장한 스킬을 선택해준다.
     
-    ![Untitled](READ_ME%203d4f34c9eaad445a8542279f98530d58/Untitled%202.png)
+    ![Untitled](https://github.com/jmj3047/zipfilx-home/blob/master/README/Untitled%202.png)
     
 - 그리고 봇 응답에서 스킬데이터 사용을 눌러주면 된다.
     
-    ![Untitled](READ_ME%203d4f34c9eaad445a8542279f98530d58/Untitled%203.png)
+    ![Untitled](https://github.com/jmj3047/zipfilx-home/blob/master/README/Untitled%203.png)

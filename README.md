@@ -33,48 +33,50 @@
     
 
 ### Requirements.txt
-    ```
-    certifi==2021.10.8
-    charset-normalizer==2.0.12
-    click==8.1.3
-    colorama==0.4.4
-    et-xmlfile==1.1.0
-    Flask==2.1.2
-    gunicorn==20.1.0
-    idna==3.3
-    importlib-metadata==4.11.3
-    itsdangerous==2.1.2
-    Jinja2==3.1.2
-    MarkupSafe==2.1.1
-    numpy==1.22.3
-    openpyxl==3.0.9
-    pandas==1.4.2
-    python-dateutil==2.8.2
-    pytz==2022.1
-    requests==2.27.1
-    six==1.16.0
-    urllib3==1.26.9
-    Werkzeug==2.1.2
-    xlrd==2.0.1
-    zipp==3.8.0
-    psycopg2==2.8.6
-    ```
+
+```
+	certifi==2021.10.8
+	charset-normalizer==2.0.12
+	click==8.1.3
+	colorama==0.4.4
+	et-xmlfile==1.1.0
+	Flask==2.1.2
+	gunicorn==20.1.0
+	idna==3.3
+	importlib-metadata==4.11.3
+	itsdangerous==2.1.2
+	Jinja2==3.1.2
+	MarkupSafe==2.1.1
+	numpy==1.22.3
+	openpyxl==3.0.9
+	pandas==1.4.2
+	python-dateutil==2.8.2
+	pytz==2022.1
+	requests==2.27.1
+	six==1.16.0
+	urllib3==1.26.9
+	Werkzeug==2.1.2
+	xlrd==2.0.1
+	zipp==3.8.0
+	psycopg2==2.8.6
+```
+
 ### How to Use
-    ```python
-    사용방법    
-    git clone ~..git
 
+```python
+사용방법
+git clone ~..git
 
-    가상환경 설치
-    $ virtualenv venv
+가상환경 설치
+$ virtualenv venv
 
-    라이브러리 설치
-    $ pip install -r requirements.txt
+라이브러리 설치
+$ pip install -r requirements.txt
 
-    사용
-    $ python main.py
-    ```
-    
+사용
+$ python main.py
+```
+  
 
 # Algorithm
 

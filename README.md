@@ -12,8 +12,7 @@
 [![gitdb][https://img.shields.io/badge/gitdb-4.0.9-F050320?logo=GitHub&logoColor=white](https://img.shields.io/badge/gitdb-4.0.9-F050320?logo=Git&logoColor=white))]
 [![jupyter][https://img.shields.io/badge/jupyter_client-7.1.2-F37626?logo=Jupyter&logoColor=white](https://img.shields.io/badge/jupyter_client-7.1.2-F37626?logo=Jupyter&logoColor=white))]
 [![jupyter][https://img.shields.io/badge/jupyter_core-4.9.2-F37626?logo=Jupyter&logoColor=white](https://img.shields.io/badge/jupyter_core-4.9.2-F37626?logo=Jupyter&logoColor=white))]`
-
-`[![Kakao]https://img.shields.io/badge/Kakao-Open_builder-FFCD00?logo=KakaoTalk&logoColor=white)]`
+[![Kakao]https://img.shields.io/badge/Kakao-Open_builder-FFCD00?logo=KakaoTalk&logoColor=white)]`
 
 # About
 

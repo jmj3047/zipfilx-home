@@ -1,4 +1,4 @@
-# READ_ME
+# README
 
 ![Python](https://img.shields.io/badge/Python-3.10.4-3776AB?logo=Python&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.3-4169E1?logo=PostgreSQL&logoColor=white)
